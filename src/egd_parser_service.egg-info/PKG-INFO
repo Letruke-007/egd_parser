@@ -1,0 +1,51 @@
+Metadata-Version: 2.4
+Name: egd-parser-service
+Version: 0.1.0
+Summary: OCR microservice for parsing Moscow unified housing documents (EGD) from PDF into JSON
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi<1.0,>=0.115
+Requires-Dist: pydantic<3.0,>=2.8
+Requires-Dist: pydantic-settings<3.0,>=2.3
+Requires-Dist: python-multipart<0.1,>=0.0.9
+Requires-Dist: uvicorn[standard]<1.0,>=0.30
+Provides-Extra: dev
+Requires-Dist: httpx<1.0,>=0.27; extra == "dev"
+Requires-Dist: pytest<9.0,>=8.2; extra == "dev"
+Requires-Dist: pytest-cov<6.0,>=5.0; extra == "dev"
+Requires-Dist: ruff<1.0,>=0.5; extra == "dev"
+
+# EGD Parser Service
+
+Микросервис для OCR-распознавания единых жилищных документов (ЕЖД) в PDF и последующего извлечения структурированных данных в JSON.
+
+## Что уже заложено
+
+- FastAPI-приложение с базовыми endpoint'ами
+- слоистая структура сервиса
+- абстракции для OCR и рендера PDF
+- каркас пайплайна: preprocess -> layout -> extract -> normalize -> validate
+- шаблоны страниц ЕЖД для будущей настройки по якорям
+
+## Быстрый старт
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .[dev]
+uvicorn egd_parser.api.app:app --reload
+```
+
+## Ближайшие шаги
+
+1. Подключить OCR-движок и рендер PDF в изображения.
+2. Сделать диагностический endpoint для извлечения сырых OCR-блоков.
+3. Добавить page-specific extractors для полей ЕЖД.
+
+## Сохранение попыток
+
+```bash
+PYTHONPATH=src OCR_ENGINE=easyocr .venv/bin/python scripts/run_attempt.py /path/to/file.pdf
+```
+
+Результат прогона будет сохранен в папку `attempts/`.

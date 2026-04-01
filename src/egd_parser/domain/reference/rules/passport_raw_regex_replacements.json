@@ -1,0 +1,68 @@
+[
+  {
+    "pattern": "^.*?(?=паспорт\\s+РФ)",
+    "replacement": "",
+    "flags": ["IGNORECASE"],
+    "count": 1
+  },
+  {
+    "pattern": "\\bГУ МВД\\s+МВД\\b",
+    "replacement": "ГУ МВД"
+  },
+  {
+    "pattern": "ГУ МВД России\\s+ОВД\\s+\\\"?Марьино\\b",
+    "replacement": "ГУ МВД России",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "ГУ МВД России\\s+по г\\.\\s*Москве",
+    "replacement": "ГУ МВД России по г. Москве",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "ГУ МВД России\\s+ОВД\\s+\\\"?Марьино\\s+по г\\.\\s*Москве",
+    "replacement": "ГУ МВД России по г. Москве",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "№\\s*(\\d{6})\\s+(\\d{2})\\s+№\\s*\\d{6}\\s+\\d{2}\\s+(\\d{2})",
+    "replacement": "№ \\1 \\2 \\3"
+  },
+  {
+    "pattern": "№\\s*(\\d{6})\\s+(\\d{2})\\s+\\d{6}\\s+[A-ZА-Я-]+\\s+(\\d{2})",
+    "replacement": "№ \\1 \\2 \\3"
+  },
+  {
+    "pattern": "ОВД\\s+\\\"Марьино(?:ОВД\\s+\\\"?Марьино\\\"?)+",
+    "replacement": "ОВД \"Марьино\"",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "ОВД\\s+\\\"Марьино(?:\\s+ОВД\\s+Марьино)?\\s+\\\"",
+    "replacement": "ОВД \"Марьино\"",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": ",\\s*выдан\\s+\\d{2},\\s*выдан",
+    "replacement": ", выдан",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\b45\\s+11,\\s+выдан\\s+ОТДЕЛОМ\\b",
+    "replacement": "45 11, выдан ОТДЕЛОМ"
+  },
+  {
+    "pattern": "\\b45\\s+J\\s+(\\d{2})",
+    "replacement": "45 \\1"
+  },
+  {
+    "pattern": "\\bГУ\\s+(\\d{2}),\\s*выдан\\s+МВД\\s+России",
+    "replacement": "ГУ МВД России",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bвыдан\\s+выдан\\b",
+    "replacement": "выдан",
+    "flags": ["IGNORECASE"]
+  }
+]

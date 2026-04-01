@@ -1,0 +1,157 @@
+[
+  {
+    "pattern": "^Св-во\\b",
+    "replacement": "Свидетельство",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bУпра-\\s*вление\\b",
+    "replacement": "Управление",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bУпра(?=\\s*Федерал)",
+    "replacement": "Управление",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bУправл\\.\\s*Федеральной\\.\\s*",
+    "replacement": "Управление Федеральной ",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bФедерал\\b",
+    "replacement": "Федеральной",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bб1н\\b",
+    "replacement": "б/н",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bбен\\b",
+    "replacement": "б/н",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bбАн\\b",
+    "replacement": "б/н",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bB\\s+№\\b",
+    "replacement": "№"
+  },
+  {
+    "pattern": "№\\s*[BВ]\\s+(\\d)",
+    "replacement": "№ \\1"
+  },
+  {
+    "pattern": "\\bУпра(?=Федеральной)",
+    "replacement": "Управление "
+  },
+  {
+    "pattern": "\\bзапись\\s+ЕГРН\\s+вление\\s+B\\s+№",
+    "replacement": "запись ЕГРН №",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bзапись\\s+ЕГРН\\s+вление\\s+№",
+    "replacement": "запись ЕГРН №",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bЕГРН\\s+вление\\s+№",
+    "replacement": "ЕГРН №",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bвление\\s+№",
+    "replacement": "№",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "(\\d)-(\\d{2}\\.\\d{2}\\.\\d{4})",
+    "replacement": "\\1 от \\2"
+  },
+  {
+    "pattern": "-(?=от\\s*\\d{2}\\.\\d{2}\\.\\d{4})",
+    "replacement": " ",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "(\\d{4})-от\\s*(\\d{2}\\.\\d{2}\\.\\d{4})",
+    "replacement": "\\1 от \\2",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "-(\\d)от\\s*(\\d{2}\\.\\d{2}\\.\\d{4})",
+    "replacement": " от \\2",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "(ЕГРН\\s+№\\s+.+?/\\d{4})-от\\s*(\\d{2}\\.\\d{2}\\.\\d{4})",
+    "replacement": "\\1 от \\2",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "(\\d)от\\s+(\\d{2}\\.\\d{2}\\.\\d{4})",
+    "replacement": "\\1 от \\2",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bбот\\s+(\\d{2}\\.\\d{2}\\.\\d{4})",
+    "replacement": "от \\1",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": ",\\s*Зот\\s+(\\d{2}\\.\\d{2}\\.\\d{4})",
+    "replacement": " от \\1",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\s*;\\s*запись\\s+ЕГРН\\s+№",
+    "replacement": "; запись ЕГРН №",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bПОЛИТ\\s+и\\s+ЖИЛ:?\\b",
+    "replacement": "",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bВЛ\\b",
+    "replacement": "",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bвыдан\\s*-\\s*$",
+    "replacement": "",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bполит\\.и\\s+жил\\.фонда\\b",
+    "replacement": "полит. и жил. фонда",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\bг\\.Москвы\\b",
+    "replacement": "г. Москвы",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\s{2,}",
+    "replacement": " "
+  },
+  {
+    "pattern": "\\bвыдан\\s*$",
+    "replacement": "",
+    "flags": ["IGNORECASE"]
+  },
+  {
+    "pattern": "\\s+(суда|cyда|до2овop|договор купли-продажи|иной|субар|oama|дата|кем выдан|указы).*$",
+    "replacement": "",
+    "flags": ["IGNORECASE"]
+  }
+]

@@ -1,0 +1,30 @@
+page: 2
+name: page2
+anchors:
+  residents_header:
+    contains: "Ha данной площади зарегистрированы по месту жительства"
+  temporary_header:
+    contains: "Кроме того, на данной площади зарегистрированы по месту пребывания"
+regions:
+  residents_table:
+    page_2:
+      top: 850
+      left: 0
+      right: 2800
+    continuation_page:
+      top: 430
+      left: 0
+      right: 2800
+    columns:
+      full_name:
+        left: 0
+        right: 560
+      birth_date:
+        left: 500
+        right: 930
+      current_passport:
+        left: 1180
+        right: 2050
+      departure:
+        left: 2050
+        right: 2800
