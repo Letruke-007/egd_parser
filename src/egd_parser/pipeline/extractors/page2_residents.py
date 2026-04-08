@@ -13,6 +13,9 @@ from egd_parser.pipeline.validate.confidence import (
 )
 import re
 
+WITHOUT_REGISTRATION_TEXT_RE = re.compile(r"без\W*регистрац", re.IGNORECASE)
+
+
 def extract_page2_residents(pages: list[OCRPageResult]) -> dict:
     block, _ = extract_page2_residents_with_trace(pages)
     return block
@@ -164,3 +167,62 @@ def extract_registered_persons_temporary(text: str) -> dict:
         "count": len(persons),
         "persons": persons,
     }
+
+
+def annotate_without_registration(persons_block: dict) -> dict:
+    persons = [annotate_person_registration_status(dict(person)) for person in persons_block.get("persons", [])]
+    patched = dict(persons_block)
+    patched["persons"] = persons
+    patched["count"] = len(persons)
+    return patched
+
+
+def annotate_person_registration_status(person: dict) -> dict:
+    raw_text = person_departure_raw_text(person)
+    if has_without_registration_marker(raw_text):
+        person["__registration_status"] = "without_registration"
+        person["__registration_status_raw"] = raw_text
+    else:
+        person["__registration_status"] = "registered"
+        person.pop("__registration_status_raw", None)
+    return person
+
+
+def person_has_without_registration(person: dict) -> bool:
+    return (person.get("__registration_status") or "").lower() == "without_registration"
+
+
+def person_departure_raw_text(person: dict) -> str:
+    return (
+        person.get("__departure_raw_text")
+        or (person.get("departure") or {}).get("raw")
+        or ""
+    )
+
+
+def has_without_registration_marker(value: str | None) -> bool:
+    if not value:
+        return False
+    normalized = " ".join(str(value).replace("ё", "е").lower().split())
+    if WITHOUT_REGISTRATION_TEXT_RE.search(normalized):
+        return True
+    compact = re.sub(r"[^а-яa-z0-9]+", "", normalized)
+    return "безрегистрац" in compact
+
+
+def filter_out_without_registration(persons: list[dict]) -> list[dict]:
+    return [person for person in persons if not person_has_without_registration(person)]
+
+
+def build_without_registration_trace(persons: list[dict]) -> list[dict]:
+    return [
+        {
+            "full_name": person.get("full_name"),
+            "birthday_date": person.get("birthday_date"),
+            "registration_status": "without_registration",
+            "raw": person.get("__registration_status_raw") or person.get("__departure_raw_text"),
+            "source_pages": [person.get("__page_number")] if person.get("__page_number") else [],
+        }
+        for person in persons
+        if person_has_without_registration(person)
+    ]

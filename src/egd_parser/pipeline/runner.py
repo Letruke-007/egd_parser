@@ -7,6 +7,11 @@ from egd_parser.infrastructure.settings import get_settings
 from egd_parser.pipeline.extractors.page1 import extract_page1
 from egd_parser.pipeline.extractors.page2 import extract_page2
 from egd_parser.pipeline.extractors.page2_row_ocr import apply_row_reocr_fallback
+from egd_parser.pipeline.extractors.page2_residents import (
+    annotate_without_registration,
+    build_without_registration_trace,
+    filter_out_without_registration,
+)
 from egd_parser.pipeline.layout.page_classifier import classify_pages
 from egd_parser.pipeline.normalize.dates import normalize_dates
 from egd_parser.pipeline.normalize.rule_registry import (
@@ -43,6 +48,9 @@ class PipelineRunner:
             page2_data.get("registered_persons_constantly", {}),
             classified_pages,
             self.ocr,
+        )
+        page2_data["registered_persons_constantly"] = annotate_without_registration(
+            page2_data.get("registered_persons_constantly", {})
         )
         extracted_data = build_public_payload(page1_data, page2_data)
         normalized_data = normalize_dates(extracted_data)
@@ -125,6 +133,9 @@ def build_extraction_trace(public_payload: dict, raw_page2_payload: dict) -> dic
         }
         for person in public_persons
     ]
+    residents_trace["without_registration_persons"] = build_without_registration_trace(
+        raw_page2_payload.get("registered_persons_constantly", {}).get("persons", [])
+    )
 
     owners = page1.get("owners", [])
     primary_tenant = page1.get("primary_tenant")
@@ -250,27 +261,30 @@ def reconcile_registered_persons(page1: dict, page2: dict) -> dict:
     used = {person.get("full_name") for person in persons if person.get("full_name") in candidates}
     remaining = [candidate for candidate in candidates if candidate not in used]
 
+    public_persons = []
     for person in persons:
         name = person.get("full_name") or ""
         if should_skip_name_reconciliation(person):
             person["full_name"] = normalize_registered_full_name(person.get("full_name"))
-            continue
+        else:
+            matched_candidate = find_best_candidate_name(name, candidates)
+            if matched_candidate:
+                person["full_name"] = matched_candidate
+            elif is_incomplete_registered_name(name) and len(remaining) == 1:
+                person["full_name"] = remaining[0]
+                used.add(remaining[0])
+                remaining = [candidate for candidate in candidates if candidate not in used]
+            person["full_name"] = normalize_registered_full_name(person.get("full_name"))
+            person = normalize_registered_passport_by_person(person)
+            person = merge_page1_subject_passport(page1, person)
+        public_persons.append(person)
 
-        matched_candidate = find_best_candidate_name(name, candidates)
-        if matched_candidate:
-            person["full_name"] = matched_candidate
-        elif is_incomplete_registered_name(name) and len(remaining) == 1:
-            person["full_name"] = remaining[0]
-            used.add(remaining[0])
-            remaining = [candidate for candidate in candidates if candidate not in used]
-        person["full_name"] = normalize_registered_full_name(person.get("full_name"))
-        person = normalize_registered_passport_by_person(person)
-        person = merge_page1_subject_passport(page1, person)
+    public_persons = filter_out_without_registration(public_persons)
 
     patched = dict(page2)
     patched["registered_persons_constantly"] = {
-        "count": len(persons),
-        "persons": [build_public_person(strip_internal_person_metadata(person)) for person in persons],
+        "count": len(public_persons),
+        "persons": [build_public_person(strip_internal_person_metadata(person)) for person in public_persons],
     }
     return patched
 

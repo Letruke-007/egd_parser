@@ -274,12 +274,14 @@ def parse_resident_rows_on_page_with_layout(page: OCRPageResult, layout: dict) -
         if page.page_number > 2 and index == 0 and is_continuation_tail(full_name, name_words):
             continue
         if full_name and birthday_date:
+            departure_raw_text = " ".join(word.text for word in sorted(selected_departure_words, key=lambda item: (item.bbox.top, item.bbox.left)))
             persons.append(
                 {
                     "full_name": full_name,
                     "birthday_date": birthday_date,
                     "passport": passport,
                     "departure": departure,
+                    "__departure_raw_text": departure_raw_text,
                     "__page_number": page.page_number,
                     "__row_bbox": bounding_box_from_words(row_words),
                     "__document_bbox": bounding_box_from_words(selected_document_words),

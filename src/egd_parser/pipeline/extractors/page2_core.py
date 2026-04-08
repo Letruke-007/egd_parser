@@ -370,6 +370,9 @@ def parse_resident_row_words(row_words: list, page_number: int, departure_contex
         "birthday_date": birthday_date,
         "passport": passport,
         "departure": departure,
+        "__departure_raw_text": " ".join(
+            word.text for word in sorted(selected_departure_words, key=lambda item: (item.bbox.top, item.bbox.left))
+        ),
         "__page_number": page_number,
         "__row_bbox": bounding_box_from_words(row_words),
         "__document_bbox": bounding_box_from_words(current_passport_words),
